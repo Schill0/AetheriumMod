@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"package": "com.espmod.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"client.EspClientMixin",
+		"client.CameraMixin",
+		"client.EntityMixin",
+		"client.KeyboardInputMixin",
+		"client.MixinMouseInput",
+		"litematica.MixinGuiPlacementConfiguration"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

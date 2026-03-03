@@ -1,0 +1,7 @@
+Spiegazione comandi.
+
+.at set A ( questo comando permette di posizionare corner A col click dello stick )
+.at set B ( questo comando permette di posizionare corner B col click dello stick )
+.at invsee <player> ( questo comando permette di vedere l'inventario di un player ( consigliato una gui di una doppia chest per vedere pure l'hotbar e l'armor che possiede )
+.at endsee <player> ( questo comando permette di vedere l'ender chest di un player ( se possibile ), ( consiglio al solito gui di una doppia cassa )
+.at help ( visualizzi tutti i comandi con breve spiegazione )

@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "espmod",
+	"version": "${version}",
+	"name": "EspMod",
+	"description": "ESP Mod with trace and block analysis features.",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/espmod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.espmod.EspMod"
+		],
+		"client": [
+			"com.espmod.EspModClient"
+		],
+		"modmenu": [
+			"com.espmod.gui.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"espmod.mixins.json",
+		{
+			"config": "espmod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.2",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

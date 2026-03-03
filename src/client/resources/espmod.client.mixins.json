@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.espmod.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"EspClientMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
