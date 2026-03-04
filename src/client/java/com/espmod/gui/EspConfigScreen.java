@@ -166,6 +166,11 @@ public class EspConfigScreen extends Screen {
 
         drawButton(context, "Open Block Selector", p3x + 10, startY + 90, 120, 20, mouseX, mouseY, 0xFF5500AA);
 
+        // ESP Scanner Settings
+        int scanY = startY + 115;
+        context.drawTextWithShadow(this.textRenderer, "ESP Radius:", p3x + 10, scanY + 2, 0xFFAAAAAA);
+        drawSizeControl(context, Config.espBlockRadius, p3x + 70, scanY, mouseX, mouseY);
+
         // Bot Settings
         int bty = startY + 145;
         context.drawTextWithShadow(this.textRenderer, "Bot Start Command:", p3x + 10, bty, 0xFFAAAAAA);
@@ -288,6 +293,27 @@ public class EspConfigScreen extends Screen {
             }
             if (isHovered(p1x + 138, ty, 12, 12, mouseX, mouseY)) {
                 Config.chunkAnalysisAISize = Math.min(10, Config.chunkAnalysisAISize + 1);
+                Config.save();
+                return true;
+            }
+
+            // Open Block Selector Button
+            if (isHovered(p3x + 10, startY + 90, 120, 20, mouseX, mouseY)) {
+                if (this.client != null) {
+                    this.client.setScreen(EspModConfigYacl.createConfigScreen(this));
+                }
+                return true;
+            }
+
+            // ESP Radius Bounds Control
+            int scanY = startY + 115;
+            if (isHovered(p3x + 70, scanY, 12, 12, mouseX, mouseY)) {
+                Config.espBlockRadius = Math.max(16, Config.espBlockRadius - 5);
+                Config.save();
+                return true;
+            }
+            if (isHovered(p3x + 98, scanY, 12, 12, mouseX, mouseY)) {
+                Config.espBlockRadius = Math.min(319, Config.espBlockRadius + 5);
                 Config.save();
                 return true;
             }

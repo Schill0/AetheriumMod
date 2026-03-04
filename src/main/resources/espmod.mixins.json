@@ -6,9 +6,7 @@
 		"client.EspClientMixin",
 		"client.CameraMixin",
 		"client.EntityMixin",
-		"client.KeyboardInputMixin",
-		"client.MixinMouseInput",
-		"litematica.MixinGuiPlacementConfiguration"
+		"client.KeyboardInputMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

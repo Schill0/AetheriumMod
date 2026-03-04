@@ -56,13 +56,15 @@ public class EspModConfigYacl {
                                                                                                 })
                                                                                 .controller(TickBoxControllerBuilder::create)
                                                                                 .build())
+                                                                .build())
+                                                .group(OptionGroup.createBuilder()
+                                                                .name(Text.literal("Scanner Settings"))
                                                                 .option(Option.<Integer>createBuilder()
-                                                                                .name(Text.literal(
-                                                                                                "ESP Block Radius"))
+                                                                                .name(Text.literal("ESP Block Radius"))
+                                                                                .description(OptionDescription.of(Text
+                                                                                                .literal("Distance in blocks to search for targeted blocks.")))
                                                                                 .binding(60, () -> Config.espBlockRadius,
-                                                                                                newVal -> {
-                                                                                                        Config.espBlockRadius = newVal;
-                                                                                                })
+                                                                                                newVal -> Config.espBlockRadius = newVal)
                                                                                 .controller(opt -> IntegerSliderControllerBuilder
                                                                                                 .create(opt)
                                                                                                 .range(16, 319)
@@ -112,30 +114,6 @@ public class EspModConfigYacl {
                                                                                                                                         col.getBlue());
                                                                                                 })
                                                                                 .controller(ColorControllerBuilder::create)
-                                                                                .build())
-                                                                .build())
-                                                .group(OptionGroup.createBuilder()
-                                                                .name(Text.literal("Smart Automation Bots"))
-                                                                .option(Option.<String>createBuilder()
-                                                                                .name(Text.literal(
-                                                                                                "Bot Startup Command"))
-                                                                                .description(OptionDescription.of(Text
-                                                                                                .literal("Command to run when bots start. Leave empty to disable.")))
-                                                                                .binding("/home casse",
-                                                                                                () -> Config.botStartCommand,
-                                                                                                newVal -> Config.botStartCommand = newVal)
-                                                                                .controller(StringControllerBuilder::create)
-                                                                                .build())
-                                                                .option(Option.<Integer>createBuilder()
-                                                                                .name(Text.literal(
-                                                                                                "Bot Startup Wait (Ticks)"))
-                                                                                .description(OptionDescription.of(Text
-                                                                                                .literal("How many ticks to wait after running the command before starting tasks (20 ticks = 1 second).")))
-                                                                                .binding(60, () -> Config.botStartWaitTicks,
-                                                                                                newVal -> Config.botStartWaitTicks = newVal)
-                                                                                .controller(opt -> IntegerSliderControllerBuilder
-                                                                                                .create(opt)
-                                                                                                .range(0, 400).step(20))
                                                                                 .build())
                                                                 .build())
                                                 .build())

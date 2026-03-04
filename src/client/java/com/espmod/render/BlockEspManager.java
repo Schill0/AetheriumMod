@@ -13,10 +13,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.state.property.Properties;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.render.*;
+import org.joml.Matrix4f;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BlockEspManager {
     private static final Set<BlockPos> foundBlocks = ConcurrentHashMap.newKeySet();
@@ -104,35 +109,53 @@ public class BlockEspManager {
         Vec3d cameraPos = context.camera().getPos();
         Vec3d traceStart = Vec3d.fromPolar(context.camera().getPitch(), context.camera().getYaw()).multiply(1.0);
 
-        // Render Chest Zones (Orange)
-        for (com.espmod.litematica.ChestAreaManager.ChestZone zone : com.espmod.litematica.ChestAreaManager.chestZones
-                .values()) {
-            double minX = Math.min(zone.x1, zone.x2) - cameraPos.x;
-            double minY = Math.min(zone.y1, zone.y2) - cameraPos.y;
-            double minZ = Math.min(zone.z1, zone.z2) - cameraPos.z;
-            double maxX = Math.max(zone.x1, zone.x2) + 1 - cameraPos.x;
-            double maxY = Math.max(zone.y1, zone.y2) + 1 - cameraPos.y;
-            double maxZ = Math.max(zone.z1, zone.z2) + 1 - cameraPos.z;
-
-            Box chestBox = new Box(minX, minY, minZ, maxX, maxY, maxZ);
-            RenderUtils.drawBoxOutline(context.matrixStack(), chestBox, 0xFFA500); // Orange
+        List<BlockPos> validBlocks = new ArrayList<>();
+        double radiusSq = Config.espBlockRadius * Config.espBlockRadius;
+        for (BlockPos pos : foundBlocks) {
+            if (pos.getSquaredDistance(client.player.getPos()) <= radiusSq) {
+                validBlocks.add(pos);
+            }
         }
 
-        for (BlockPos pos : foundBlocks) {
-            if (pos.getSquaredDistance(client.player.getPos()) > Config.espBlockRadius * Config.espBlockRadius)
-                continue;
+        if (validBlocks.isEmpty()) {
+            return;
+        }
 
+        int color = Config.getColorBlock();
+        float r = (color >> 16 & 255) / 255.0F;
+        float g = (color >> 8 & 255) / 255.0F;
+        float b = (color & 255) / 255.0F;
+        float a = (color >> 24 & 255) / 255.0F;
+        if (a == 0)
+            a = 1.0f;
+
+        Matrix4f matrix = context.matrixStack().peek().getPositionMatrix();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.disableCull();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
+
+        for (BlockPos pos : validBlocks) {
             double x = pos.getX() - cameraPos.x;
             double y = pos.getY() - cameraPos.y;
             double z = pos.getZ() - cameraPos.z;
 
             Vec3d targetPos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
 
-            int color = Config.getColorBlock();
-            RenderUtils.drawLine(context.matrixStack(), traceStart, targetPos, color);
+            RenderUtils.addLineToBuffer(buffer, matrix, traceStart, targetPos, r, g, b, a);
 
             Box box = new Box(x, y, z, x + 1, y + 1, z + 1);
-            RenderUtils.drawBoxOutline(context.matrixStack(), box, color);
+            RenderUtils.addBoxOutlineToBuffer(buffer, matrix, box, r, g, b, a);
         }
+
+        BufferRenderer.drawWithGlobalProgram(buffer.end());
+
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableCull();
+        RenderSystem.disableBlend();
     }
 }
